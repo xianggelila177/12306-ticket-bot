@@ -1,0 +1,107 @@
+# 12306 抢票 Agent 配置文件 v2.0
+# 请复制此文件为 config.yaml 并修改相应配置
+
+# ==========================================
+# 账户配置 (重要：需要配置有效的 Cookie)
+# ==========================================
+accounts:
+  - name: "主账号"
+    status: "active"
+    # 加密后的 Cookie，从环境变量读取
+    encrypted_cookies: "${12306_COOKIES}"
+    # 用户 Token，从环境变量读取
+    token: "${12306_TOKEN}"
+
+# ==========================================
+# 监控目标配置
+# ==========================================
+targets:
+  - date: "2026-02-22"        # 出发日期 YYYY-MM-DD
+    from_code: "SBT"          # 出发站代码 (如: 北京=BJP, 上海=SHH)
+    to_code: "JMB"            # 到达站代码
+    trains:                   # 监控的车次列表（留空则监控所有车次）
+      - "K349"
+      - "K553"
+      - "K1393"
+    seats:                    # 优先座位类型（按优先级排序）
+      - "硬卧"
+      - "软卧"
+      - "硬座"
+      - "二等座"
+      - "一等座"
+
+# ==========================================
+# 风控配置
+# ==========================================
+risk_control:
+  min_query_interval: 5       # 最小查询间隔（秒）
+  max_query_interval: 15      # 最大查询间隔（秒）
+  daily_limit: 1000           # 日查询上限
+  max_retries: 3              # 最大重试次数
+
+# ==========================================
+# 验证码配置
+# ==========================================
+captcha:
+  # 打码平台：chaojiying(超级鹰) / tuchong(图虫) / custom
+  provider: "chaojiying"
+  # 验证码类型：9004 (12306新版本验证码)
+  codetype: "9004"
+  # 超级鹰配置
+  chaojiying:
+    username: "${CHAOJIYING_USERNAME}"
+    password: "${CHAOJIYING_PASSWORD}"
+    soft_id: "904813"
+    kind: 9004
+
+# ==========================================
+# 通知配置
+# ==========================================
+notification:
+  # 是否启用通知
+  enabled: true
+  # PushPlus 推送 Token
+  pushplus_token: "${PUSHPLUS_TOKEN}"
+  # 邮件通知（可选）
+  email:
+    enabled: false
+    smtp_server: "smtp.163.com"
+    smtp_port: 465
+    sender: "your_email@163.com"
+    password: "${EMAIL_PASSWORD}"
+    receivers:
+      - "receiver@example.com"
+  # Telegram 机器人（可选）
+  telegram:
+    enabled: false
+    bot_token: "${TG_BOT_TOKEN}"
+    chat_id: "${TG_CHAT_ID}"
+
+# ==========================================
+# 代理配置（可选）
+# ==========================================
+proxy:
+  enabled: false
+  # 代理类型：socks5 / http
+  type: "socks5"
+  host: "127.0.0.1"
+  port: 1080
+  username: null
+  password: null
+
+# ==========================================
+# 日志配置
+# ==========================================
+logging:
+  level: "INFO"              # 日志级别: DEBUG/INFO/WARNING/ERROR
+  file: "logs/app.log"       # 日志文件路径
+  max_size: 10485760         # 日志文件最大大小（字节）
+  backup_count: 5            # 保留的日志文件数量
+  # 敏感信息脱敏
+  desensitize: true
+
+# ==========================================
+# 数据库配置
+# ==========================================
+database:
+  path: "data/12306_bot.db"   # 数据库文件路径

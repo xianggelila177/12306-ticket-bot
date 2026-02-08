@@ -1,0 +1,11 @@
+# 12306 Ticket Bot Requirements
+# 12306 抢票机器人依赖
+
+requests==2.31.0
+Pillow==10.0.0
+PyYAML==6.0.1
+cryptography==41.0.0
+schedule==1.2.0
+tenacity==8.2.0
+qrcode==7.4.2
+python-dotenv==1.0.0
